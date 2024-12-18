@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transferencia Cliente-Servidor</title>
+</head>
+<body>
+    <h1>Transferencia Cliente-Servidor</h1>
+    <form id="form">
+        <label for="data">Datos:</label>
+        <input type="text" id="data" name="data" required>
+        <button type="submit">Enviar</button>
+    </form>
+    <div id="response"></div>
+
+    <script>
+        const form = document.getElementById('form');
+        const responseDiv = document.getElementById('response');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = document.getElementById('data').value;
+
+            try {
+                const response = await fetch('/transfer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data })
+                });
+
+                if (response.ok) {
+                    const result = await response.text();
+                    responseDiv.innerText = `Respuesta del servidor: ${result}`;
+                } else {
+                    responseDiv.innerText = `Error del servidor: ${response.status}`;
+                }
+            } catch (error) {
+                responseDiv.innerText = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
